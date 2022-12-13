@@ -1,0 +1,33 @@
+name: auto build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+    -
+      name: Setup Env
+      run: |
+        sudo apt-get update
+        sudo apt-get install g++ cmake libopencv-dev
+    -
+      name: Build
+      run: |
+        cmake . -B build
+        make -C build
+        strip build/yuv2png
+    -
+      name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: yuv2png
+        path: build/yuv2png
+
